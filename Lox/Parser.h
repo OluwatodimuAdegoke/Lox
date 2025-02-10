@@ -9,11 +9,6 @@ class Parser
 {
 private:
 
-	class ParseError : public std::runtime_error {
-	public:
-		ParseError(const std::string& message): std::runtime_error(message) {}
-	};
-
 	std::vector<Token>& tokens;
 	int current = 0;
 	bool match(std::initializer_list<TokenType> types);

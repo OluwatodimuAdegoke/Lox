@@ -11,8 +11,12 @@
 #include "Scanner.h"
 #include "Parser.h"
 #include "AstPrinter.h"
+#include "Interpreter.h"
 
 class Lox {
+private:
+	static Interpreter interpreter;
+
 public:
 
 	static void runFile(const char* path) {
@@ -31,6 +35,7 @@ public:
 		run(content);
 
 		if (Error::hadError) exit(65);
+		if (Error::hadRuntimeError) exit(70);
 	}
 
 	static void runPrompt() {
@@ -54,7 +59,7 @@ public:
 
 		if (Error::hadError) return;
 
-		std::cout << AstPrinter().print(expression) << std::endl;
+		interpreter.interpret(expression);
 
 	}
 	
@@ -65,7 +70,8 @@ public:
 
 // Intialize the static variable
 bool Error::hadError = false;
-
+bool Error::hadRuntimeError = false;
+Interpreter Lox::interpreter;
 
 int main(int argc, char *argv[])
 {

@@ -10,7 +10,7 @@ char Scanner::advance() {
 }
 
 void Scanner::addToken(TokenType type) {
-	addToken(type, std::make_shared<Nil>());
+	addToken(type, nullptr);
 }
 
 void Scanner::addToken(TokenType type, std::shared_ptr<Object> literal) {
@@ -160,7 +160,7 @@ std::vector<Token> Scanner::scanTokens() {
 		scanToken();
 	}
 	// Add EOF token at the end
-	tokens.push_back(Token(TokenType::EOF_TOKEN, "", std::make_shared<Nil>(), line));
+	tokens.push_back(Token(TokenType::EOF_TOKEN, "", nullptr, line));
 	return tokens;
 }
 

@@ -69,7 +69,7 @@ std::shared_ptr<Expr> Parser::unary() {
 std::shared_ptr<Expr> Parser::primary() {
 	if (match({ TokenType::FALSE })) return std::make_shared<Literal>(std::make_shared<Bool>(false));
 	if (match({ TokenType::TRUE }))  return std::make_shared<Literal>(std::make_shared<Bool>(true));
-	if (match({ TokenType::NIL }))   return std::make_shared<Literal>(std::make_shared<Nil>());
+	if (match({ TokenType::NIL }))   return std::make_shared<Literal>(nullptr);
 
 	if (match({ TokenType::NUMBER, TokenType::STRING })) {
 		return std::make_shared<Literal>(previous().literal);
@@ -91,7 +91,7 @@ Token Parser::consume(TokenType type,const std::string& message) {
 	throw error(peek(), message);
 }
 
-Parser::ParseError Parser::error(Token token,const std::string& message) {
+ParseError Parser::error(Token token,const std::string& message) {
 	Error::error(token, message);
 	return ParseError("Parse error at '" + token.lexeme + "': " + message);
 }

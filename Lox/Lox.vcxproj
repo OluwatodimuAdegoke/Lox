@@ -131,6 +131,7 @@
     <ClCompile Include="AstPrinter.cpp" />
     <ClCompile Include="Error.cpp" />
     <ClCompile Include="GenerateAst.cpp" />
+    <ClCompile Include="Interpreter.cpp" />
     <ClCompile Include="Lox.cpp" />
     <ClCompile Include="Parser.cpp" />
     <ClCompile Include="Scanner.cpp" />
@@ -143,10 +144,12 @@
     <ClInclude Include="Error.h" />
     <ClInclude Include="Expr.h" />
     <ClInclude Include="GenerateAst.h" />
+    <ClInclude Include="Interpreter.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="Scanner.h" />
     <ClInclude Include="Token.h" />
+    <ClInclude Include="Visitor.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
