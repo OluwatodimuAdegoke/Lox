@@ -19,5 +19,5 @@ enum TokenType {
 	EOF_TOKEN,
 };
 
-
+// Converts the TokenType to a string.
 std::string TokenTypeToString(TokenType type);

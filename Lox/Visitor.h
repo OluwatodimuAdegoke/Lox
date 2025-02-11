@@ -8,6 +8,16 @@ class Literal;
 class Unary;
 
 
+/*
+* Visitor abstract class that contains the functions to visit the different expressions
+* 
+* Functions:
+* visitBinaryExpr: Function to visit the binary expression
+* visitGroupingExpr: Function to visit the grouping expression
+* visitLiteralExpr: Function to visit the literal expression
+* visitUnaryExpr: Function to visit the unary expression
+*/
+
 class Visitor {
 public:
     virtual std::shared_ptr<Object> visitBinaryExpr(const Binary& expr) = 0;

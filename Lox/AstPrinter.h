@@ -5,7 +5,20 @@
 #include <iostream>
 #include <ostream>
 
-
+/*
+* AstPrinter class that contains the functions to print the abstract syntax tree
+* It inherits from the Visitor class and contains the functions to visit the different expressions
+* 
+* Functions:
+* print: Function to print the expression
+* visitBinaryExpr: Function to visit the binary expression
+* visitGroupingExpr: Function to visit the grouping expression
+* visitLiteralExpr: Function to visit the literal expression
+* visitUnaryExpr: Function to visit the unary expression
+* parenthesize: Function to parenthesize the expression
+* appendExpr: Function to append the expression
+* 
+*/
 class AstPrinter : public Visitor
 {
 public:

@@ -1,6 +1,14 @@
 #pragma once
 #include <string>
 
+/*
+* Object class that contains the functions to create the different objects
+* Bool class that contains the functions to create a boolean object
+* Number class that contains the functions to create a number object
+* String class that contains the functions to create a string object
+* 
+*/
+
 class Object {
 public:
 	virtual ~Object() = default;
@@ -57,12 +65,3 @@ public:
 		return false;
 	}
 };
-
-//class Nil : public Object {
-//public:
-//	Nil() = default;
-//	std::string toString() override {
-//		return "nil";
-//	}
-//};
-//

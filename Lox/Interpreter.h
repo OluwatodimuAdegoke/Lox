@@ -2,7 +2,26 @@
 #include "Expr.h"
 #include "Error.h"
 
-
+/*
+* Interpreter class that contains the functions to interpret the expressions
+* gotton from the parser. It inherits from the Visitor class and contains the functions
+* to visit the different expressions and evaluate them to get the result.
+* 
+* Functions:
+* evaluate: Function to evaluate the expression
+* interpret: Function to interpret the expression
+* visitLiteralExpr: Function to visit the literal expression
+* visitGroupingExpr: Function to visit the grouping expression
+* visitBinaryExpr: Function to visit the binary expression
+* visitUnaryExpr: Function to visit the unary expression
+* 
+* Helper Functions:
+* isTruthy: Function to check if the object is truthy or not
+* isEqual: Function to check if the two objects are equal
+* checkNumberOperand: Function to check if the operand is a number
+* checkNumberOperands: Function to check if the operands are numbers
+* stringify: Function to convert the object to a string
+*/
 class Interpreter : public Visitor
 {
 private:

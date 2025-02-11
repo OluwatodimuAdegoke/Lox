@@ -6,6 +6,10 @@
 #include <fstream>
 #include <sstream>
 
+
+/*
+* GenerateAst class that contains the functions to generate the AST classes and the visitor class
+*/
 class GenerateAst
 {
 public:

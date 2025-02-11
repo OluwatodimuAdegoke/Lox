@@ -5,6 +5,37 @@
 #include "Error.h"
 
 
+/*
+* Parser class that contains the functions to parse the tokens
+* It takes a vector of tokens and parses them into an expression
+* 
+* Variables:
+* tokens: is a vector of tokens that contains the tokens to parse
+* current: is an integer that contains the current token
+* 
+* 
+* Functions:
+* Parser: Constructor that creates a parser with the tokens
+* expression: Function to parse the expression starting with the lowest precedence
+* equality: Function to parse the equality expression 
+* comparison: Function to parse the comparison expression
+* term: Function to parse the term expression
+* factor: Function to parse the factor expression
+* unary: Function to parse the unary expression
+* primary: Function to parse the primary expression
+* 
+* Helper Functions:
+* match: Function to check if the current token matches the different types
+* check: Function to check if the current token matches the type given
+* advance: Function to advance the current token
+* peek: Function to peek at the current token
+* previous: Function to get the previous token
+* isAtEnd: Function to check if the current token is at the end
+* consume: Function to consume the current token
+* error: Function to report the error and where it happened
+* synchronize: Function to synchronize the parser
+* 
+*/
 class Parser
 {
 private:

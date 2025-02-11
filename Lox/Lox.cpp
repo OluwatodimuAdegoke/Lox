@@ -13,6 +13,17 @@
 #include "AstPrinter.h"
 #include "Interpreter.h"
 
+
+/*
+*Lox class that contains the main functions to run the file, prompt, and connect the source code to the scanner, parser, and interpreter
+* Variables:
+* 
+* Functions:
+* runFile: Function to run the file directly
+* runPrompt: Function to run the prompt for the user where you can execute code line by line
+* run: Function to connect the source code to the scanner, parser, and interpreter
+* 
+*/
 class Lox {
 private:
 	static Interpreter interpreter;
@@ -34,9 +45,11 @@ public:
 
 		run(content);
 
+		// Indicate an error in the exit code.
 		if (Error::hadError) exit(65);
 		if (Error::hadRuntimeError) exit(70);
 	}
+
 
 	static void runPrompt() {
 		std::string line;
@@ -50,6 +63,7 @@ public:
 		}
 	}
 
+	
 	static void run(std::string source) {
 		Scanner scanner(source);
 		std::vector<Token> tokens = scanner.scanTokens();
@@ -73,15 +87,21 @@ bool Error::hadError = false;
 bool Error::hadRuntimeError = false;
 Interpreter Lox::interpreter;
 
+
+// Main function that handles the command line arguments
 int main(int argc, char *argv[])
 {
+
+	// If there are more than 2 arguments, print usage
 	if (argc > 2) {
-		std::cout << "Usage: jlox [script]";
+		std::cout << "Usage: lox [script]";
 		return 64;
 	}
+	//If there is two arguments, run the file
 	else if (argc == 2) {
 		Lox::runFile(argv[1]);
 	}
+	// If there is only one argument, run the prompt
 	else {
 		Lox::runPrompt();
 	}

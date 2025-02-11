@@ -6,6 +6,12 @@
 #include "Object.h"
 #include "Visitor.h"
 
+/*
+* Expr abstract class that contains the functions to accept the visitor
+* 
+* Function:
+* accept: Function to accept the visitor using the visitor pattern
+*/
 
 class Expr {
 public:
@@ -14,6 +20,18 @@ public:
 };
 
 
+/*
+* Binary class that contains the functions to create a binary expression
+* 
+* Variables:
+* left: is a shared pointer to an Expr that contains the left expression
+* op: is a Token that contains the operator
+* right: is a shared pointer to an Expr that contains the right expression
+* 
+* Functions:
+* Binary: Constructor that creates a binary expression with the left, operator, and right expression
+* accept: Function to accept the visitor using the visitor pattern
+*/
 class Binary : public Expr {
 public:
     std::shared_ptr<Expr> left;
@@ -27,6 +45,17 @@ public:
     }
 };
 
+
+/*
+* Grouping class that contains the functions to create a grouping expression
+* 
+* Variables:
+* expression: is a shared pointer to an Expr that contains the expression
+* 
+* Functions:
+* Grouping: Constructor that creates a grouping expression with the expression
+* accept: Function to accept the visitor using the visitor pattern
+*/
 class Grouping : public Expr {
 public:
     std::shared_ptr<Expr> expression;
@@ -38,6 +67,16 @@ public:
     }
 };
 
+/*
+* Literal class that contains the functions to create a literal expression
+* 
+* Variables:
+* value: is a shared pointer to an Object that contains the value
+* 
+* Functions:
+* Literal: Constructor that creates a literal expression with the value
+* accept: Function to accept the visitor using the visitor pattern
+*/
 class Literal : public Expr {
 public:
     std::shared_ptr<Object> value;
@@ -48,6 +87,18 @@ public:
         return visitor.visitLiteralExpr(*this);
     }
 };
+
+/*
+* Unary class that contains the functions to create a unary expression
+*   
+* Variables:
+* op: is a Token that contains the operator
+* right: is a shared pointer to an Expr that contains the right expression
+* 
+* Functions:
+* Unary: Constructor that creates a unary expression with the operator and right expression
+* accept: Function to accept the visitor using the visitor pattern
+*/
 
 class Unary : public Expr {
 public:

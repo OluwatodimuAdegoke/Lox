@@ -17,6 +17,18 @@ public:
         : std::runtime_error(message) {}
 };
 
+/*
+* Error class that contains the functions to report errors, runtime errors, and check if there were any errors
+* Variables:
+* hadError: is a boolean that checks if there were any errors and cancels the program if there were
+* hadRuntimeError: is a boolean that checks if there were any runtime errors and cancels the program if there were
+
+* Functions:
+* report: Function to report the error and where it happened
+* error: Function to report the error and where it happened using the report function
+
+
+*/
 class Error {
 private:
     static void report(int line, const std::string& where, const std::string& message);
