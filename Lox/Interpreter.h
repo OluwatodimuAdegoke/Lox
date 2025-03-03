@@ -47,11 +47,14 @@ private:
 	std::shared_ptr<Object> visitUnaryExpr(const Unary& expr) override;
 	std::shared_ptr<Object> visitVariableExpr(const Variable& expr) override;
 	std::shared_ptr<Object> visitAssignExpr(const Assign& expr) override;
-
+	std::shared_ptr<Object> visitLogicalExpr(const Logical& expr) override;
+	
 	void visitBlock(const Block& stmt) override;	
 	void visitExpressionStmt(const ExpressionStmt& stmt) override;
+	void visitIfStmt(const IfStmt& stmt) override;
 	void visitPrintStmt(const PrintStmt& stmt) override;
 	void visitVarStmt(const VarStmt& stmt) override;
+	void visitWhileStmt(const WhileStmt& stmt) override;
 
 public:
 	void interpret(std::vector<std::shared_ptr<Stmt>> statements );

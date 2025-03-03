@@ -99,6 +99,17 @@ std::shared_ptr<Object> Interpreter::visitAssignExpr(const Assign& expr) {
     return value;
 }
 
+std::shared_ptr<Object> Interpreter::visitLogicalExpr(const Logical& expr) {
+    std::shared_ptr<Object> left = evaluate(expr.left);
+    if (expr.op.type == TokenType::OR) {
+        if (isTruthy(left)) return left;
+    }
+    else {
+        if (!isTruthy(left)) return left;
+    }
+    return evaluate(expr.right);
+}
+
 void Interpreter::visitExpressionStmt(const ExpressionStmt& stmt) {
     evaluate(stmt.expression);
 }
@@ -114,6 +125,23 @@ void Interpreter::visitVarStmt(const VarStmt& stmt) {
         value = evaluate(stmt.initializer);
     }
     environment->define(stmt.name.lexeme, value);
+}
+
+void Interpreter::visitIfStmt(const IfStmt& stmt) {
+    if (isTruthy(evaluate(stmt.condition))) {
+		execute(stmt.thenBranch);
+	}
+    else if (stmt.elseBranch != nullptr) {
+        execute(stmt.elseBranch);
+    }
+    return;
+}
+
+void Interpreter::visitWhileStmt(const WhileStmt& stmt) {
+	while (isTruthy(evaluate(stmt.condition))) {
+		execute(stmt.body);
+	}
+    return;
 }
 
 void Interpreter::visitBlock(const Block& stmt) {

@@ -109,6 +109,31 @@ public:
 };
 
 /*
+* Logical class that contains the functions to create a logical expression
+* 
+* Variables:
+* left: is a shared pointer to an Expr that contains the left
+* op: is a Token that contains the op
+* right: is a shared pointer to an Expr that contains the right
+* 
+* Functions:
+* Logical: Constructor that creates a logical expression with the left, op, and right
+* accept: Function to accept the visitor using the visitor pattern
+*/
+class Logical : public Expr {
+public:
+    std::shared_ptr<Expr> left;
+    Token op;
+    std::shared_ptr<Expr> right;
+
+    Logical(std::shared_ptr<Expr> left, Token op, std::shared_ptr<Expr> right) : left(left), op(op), right(right) {}
+
+    std::shared_ptr<Object> accept(VisitorExpr& visitor) override {
+        return visitor.visitLogicalExpr(*this);
+    }
+};
+
+/*
 * Unary class that contains the functions to create a unary expression
 * 
 * Variables:

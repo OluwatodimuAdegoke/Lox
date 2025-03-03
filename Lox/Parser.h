@@ -63,12 +63,17 @@ private:
 	std::shared_ptr<Expr> factor();
 	std::shared_ptr<Expr> unary();
 	std::shared_ptr<Expr> primary();
+	std::shared_ptr<Expr> orExpr();
+	std::shared_ptr<Expr> andExpr();
 
 	std::shared_ptr<Stmt> declaration();
 	std::shared_ptr<Stmt> varDeclaration();
 	std::shared_ptr<Stmt> statement();
 	std::shared_ptr<Stmt> printStatement();
 	std::shared_ptr<Stmt> expressionStatement();
+	std::shared_ptr<Stmt> ifStatement();
+	std::shared_ptr<Stmt> whileStatement();
+	std::shared_ptr<Stmt> forStatement();
 public:
 	Parser(std::vector<Token>& tokens) : tokens(tokens) {}
 	std::vector<std::shared_ptr<Stmt>> parse();

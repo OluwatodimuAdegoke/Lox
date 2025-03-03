@@ -62,6 +62,31 @@ public:
 };
 
 /*
+* IfStmt class that contains the functions to create a ifstmt expression
+* 
+* Variables:
+* condition: is a shared pointer to an Expr that contains the condition
+* thenBranch: is a shared pointer to an Stmt that contains the thenBranch
+* elseBranch: is a shared pointer to an Stmt that contains the elseBranch
+* 
+* Functions:
+* IfStmt: Constructor that creates a ifstmt expression with the condition, thenBranch, and elseBranch
+* accept: Function to accept the visitor using the visitor pattern
+*/
+class IfStmt : public Stmt {
+public:
+    std::shared_ptr<Expr> condition;
+    std::shared_ptr<Stmt> thenBranch;
+    std::shared_ptr<Stmt> elseBranch;
+
+    IfStmt(std::shared_ptr<Expr> condition, std::shared_ptr<Stmt> thenBranch, std::shared_ptr<Stmt> elseBranch) : condition(condition), thenBranch(thenBranch), elseBranch(elseBranch) {}
+
+    void accept(VisitorStmt& visitor) override {
+        visitor.visitIfStmt(*this);
+    }
+};
+
+/*
 * PrintStmt class that contains the functions to create a printstmt expression
 * 
 * Variables:
@@ -102,6 +127,29 @@ public:
 
     void accept(VisitorStmt& visitor) override {
         visitor.visitVarStmt(*this);
+    }
+};
+
+/*
+* WhileStmt class that contains the functions to create a whilestmt expression
+* 
+* Variables:
+* condition: is a shared pointer to an Expr that contains the condition
+* body: is a shared pointer to an Stmt that contains the body
+* 
+* Functions:
+* WhileStmt: Constructor that creates a whilestmt expression with the condition, and body
+* accept: Function to accept the visitor using the visitor pattern
+*/
+class WhileStmt : public Stmt {
+public:
+    std::shared_ptr<Expr> condition;
+    std::shared_ptr<Stmt> body;
+
+    WhileStmt(std::shared_ptr<Expr> condition, std::shared_ptr<Stmt> body) : condition(condition), body(body) {}
+
+    void accept(VisitorStmt& visitor) override {
+        visitor.visitWhileStmt(*this);
     }
 };
 

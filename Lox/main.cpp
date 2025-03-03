@@ -9,21 +9,24 @@
 //        return 64;
 //    }
 //    std::string outputDir = "C:/Dev/C++/Lox/Lox";
-//  //  GenerateAst::defineAst(outputDir, "Expr", {
-//		//"Assign   : Token name, Expr value",
-//  //      "Binary   : Expr left, Token op, Expr right",
-//  //      "Grouping : Expr expression",
-//  //      "Literal  : Object value",
-//  //      "Unary    : Token op, Expr right",
-//		//"Variable : Token name"
-//  //      });
+//    GenerateAst::defineAst(outputDir, "Expr", {
+//		"Assign   : Token name, Expr value",
+//        "Binary   : Expr left, Token op, Expr right",
+//        "Grouping : Expr expression",
+//        "Literal  : Object value",
+//        "Logical  : Expr left, Token op, Expr right",
+//        "Unary    : Token op, Expr right",
+//		"Variable : Token name"
+//        });
 //
 //
 //    GenerateAst::defineAst(outputDir, "Stmt", {
 //	"Block : std::vector<std::shared_ptr<Stmt>> statements",
 //    "ExpressionStmt   : Expr expression",
+//    "IfStmt : Expr condition, Stmt thenBranch, Stmt elseBranch",
 //    "PrintStmt : Expr expression",
-//	"VarStmt : Token name, Expr initializer"
+//	"VarStmt : Token name, Expr initializer",
+//	"WhileStmt : Expr condition, Stmt body"
 //        });
 //
 //
