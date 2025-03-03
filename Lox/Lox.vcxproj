@@ -129,10 +129,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AstPrinter.cpp" />
+    <ClCompile Include="Environment.cpp" />
     <ClCompile Include="Error.cpp" />
     <ClCompile Include="GenerateAst.cpp" />
     <ClCompile Include="Interpreter.cpp" />
     <ClCompile Include="Lox.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="Parser.cpp" />
     <ClCompile Include="Scanner.cpp" />
     <ClCompile Include="Token.cpp" />
@@ -141,13 +143,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AstPrinter.h" />
+    <ClInclude Include="Environment.h" />
     <ClInclude Include="Error.h" />
     <ClInclude Include="Expr.h" />
     <ClInclude Include="GenerateAst.h" />
     <ClInclude Include="Interpreter.h" />
+    <ClInclude Include="Lox.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="Scanner.h" />
+    <ClInclude Include="Stmt.h" />
     <ClInclude Include="Token.h" />
     <ClInclude Include="Visitor.h" />
   </ItemGroup>
