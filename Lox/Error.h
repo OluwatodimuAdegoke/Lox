@@ -41,3 +41,11 @@ public:
     static void error(const Token& token, const std::string& message);
     static void runtimeError(const RuntimeError& error);
 };
+
+
+class Return : public std::exception {
+public:
+	std::shared_ptr<Object> value;
+	Return(std::shared_ptr<Object> value) : value(value) {};
+
+};

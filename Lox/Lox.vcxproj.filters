@@ -54,6 +54,9 @@
     <ClCompile Include="Environment.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LoxFunction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GenerateAst.h">
@@ -93,6 +96,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Environment.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LoxCallable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LoxFunction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

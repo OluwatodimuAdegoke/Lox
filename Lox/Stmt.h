@@ -62,6 +62,31 @@ public:
 };
 
 /*
+* FunctionStmt class that contains the functions to create a functionstmt expression
+* 
+* Variables:
+* name: is a Token that contains the name
+* params: is a shared pointer to an std::vector<Token> that contains the params
+* body: is a shared pointer to an std::vector<std::shared_ptr<Stmt>> that contains the body
+* 
+* Functions:
+* FunctionStmt: Constructor that creates a functionstmt expression with the name, params, and body
+* accept: Function to accept the visitor using the visitor pattern
+*/
+class FunctionStmt : public Stmt {
+public:
+    Token name;
+    std::shared_ptr<std::vector<Token>> params;
+    std::shared_ptr<std::vector<std::shared_ptr<Stmt>>> body;
+
+    FunctionStmt(Token name, std::shared_ptr<std::vector<Token>> params, std::shared_ptr<std::vector<std::shared_ptr<Stmt>>> body) : name(name), params(params), body(body) {}
+
+    void accept(VisitorStmt& visitor) override {
+        visitor.visitFunctionStmt(*this);
+    }
+};
+
+/*
 * IfStmt class that contains the functions to create a ifstmt expression
 * 
 * Variables:
@@ -104,6 +129,29 @@ public:
 
     void accept(VisitorStmt& visitor) override {
         visitor.visitPrintStmt(*this);
+    }
+};
+
+/*
+* ReturnStmt class that contains the functions to create a returnstmt expression
+* 
+* Variables:
+* keyword: is a Token that contains the keyword
+* value: is a shared pointer to an Expr that contains the value
+* 
+* Functions:
+* ReturnStmt: Constructor that creates a returnstmt expression with the keyword, and value
+* accept: Function to accept the visitor using the visitor pattern
+*/
+class ReturnStmt : public Stmt {
+public:
+    Token keyword;
+    std::shared_ptr<Expr> value;
+
+    ReturnStmt(Token keyword, std::shared_ptr<Expr> value) : keyword(keyword), value(value) {}
+
+    void accept(VisitorStmt& visitor) override {
+        visitor.visitReturnStmt(*this);
     }
 };
 

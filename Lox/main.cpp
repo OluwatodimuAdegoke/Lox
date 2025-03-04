@@ -12,6 +12,7 @@
 //    GenerateAst::defineAst(outputDir, "Expr", {
 //		"Assign   : Token name, Expr value",
 //        "Binary   : Expr left, Token op, Expr right",
+//		"Call     : Expr callee, Token paren, std::vector<std::shared_ptr<Expr>> arguments",
 //        "Grouping : Expr expression",
 //        "Literal  : Object value",
 //        "Logical  : Expr left, Token op, Expr right",
@@ -23,8 +24,10 @@
 //    GenerateAst::defineAst(outputDir, "Stmt", {
 //	"Block : std::vector<std::shared_ptr<Stmt>> statements",
 //    "ExpressionStmt   : Expr expression",
+//	"FunctionStmt : Token name, std::vector<Token> params, std::vector<std::shared_ptr<Stmt>> body",
 //    "IfStmt : Expr condition, Stmt thenBranch, Stmt elseBranch",
 //    "PrintStmt : Expr expression",
+//	"ReturnStmt : Token keyword, Expr value",
 //	"VarStmt : Token name, Expr initializer",
 //	"WhileStmt : Expr condition, Stmt body"
 //        });

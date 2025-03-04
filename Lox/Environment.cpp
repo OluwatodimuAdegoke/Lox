@@ -1,4 +1,5 @@
 #include "Environment.h"
+#include <iostream>
 
 Environment::Environment() {
 	values = std::map<std::string, std::shared_ptr<Object>>();
