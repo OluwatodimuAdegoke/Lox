@@ -11,6 +11,7 @@
 #include "Parser.h"
 #include "AstPrinter.h"
 #include "Interpreter.h"
+#include "Resolver.h"
 
 /*
 * Lox class that contains the main functions to run the file, prompt, and connect the source code to the scanner, parser, and interpreter

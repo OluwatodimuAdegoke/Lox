@@ -18,4 +18,7 @@ public:
     void define(const std::string& name, std::shared_ptr<Object> value);
     std::shared_ptr<Object> get(std::shared_ptr<Token> name);
     void assign(std::shared_ptr<Token> name, std::shared_ptr<Object> value);
+	std::shared_ptr<Object> getAt(int distance, const std::string& name);
+	void assignAt(int distance, const Token& name, std::shared_ptr<Object> value);
+	std::shared_ptr<Environment> ancestor(int distance);
 };

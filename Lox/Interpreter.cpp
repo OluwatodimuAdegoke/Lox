@@ -40,6 +40,20 @@ void Interpreter::execute(const std::shared_ptr<Stmt>& stmt) {
     stmt->accept(*this);
 }
 
+void Interpreter::resolve(const std::shared_ptr<Expr> expr, int depth) {
+    locals[expr] = depth;
+}
+
+std::shared_ptr<Object> Interpreter::lookUpVariable(const Token& name, const std::shared_ptr<Expr>& expr) {
+	int distance = locals[expr];
+	if (distance != NULL) {
+		return environment->getAt(distance, name.lexeme);
+	}
+	else {
+		return globals->get(std::make_shared<Token>(name));
+	}
+}
+
 std::string Interpreter::stringify(const std::shared_ptr<Object>& object) {
     if (object == nullptr) return "nil";
     return object->toString();
@@ -114,14 +128,24 @@ std::shared_ptr<Object> Interpreter::visitUnaryExpr(const Unary& expr) {
 }
 
 std::shared_ptr<Object> Interpreter::visitVariableExpr(const Variable& expr) {
-    return environment->get(std::make_shared<Token>(expr.name));
+	return lookUpVariable(expr.name, std::make_shared<Variable>(expr));
 }
+
 
 std::shared_ptr<Object> Interpreter::visitAssignExpr(const Assign& expr) {
     std::shared_ptr<Object> value = evaluate(expr.value);
-    environment->assign(std::make_shared<Token>(expr.name), value);
+
+    auto it = locals.find(std::make_shared<Assign>(expr));
+    if (it != locals.end()) {
+        int distance = it->second;
+        environment->assignAt(distance, expr.name, value);
+    }
+    else {
+        globals->assign(std::make_shared<Token>(expr.name), value);
+    }
     return value;
 }
+
 
 std::shared_ptr<Object> Interpreter::visitLogicalExpr(const Logical& expr) {
     std::shared_ptr<Object> left = evaluate(expr.left);
