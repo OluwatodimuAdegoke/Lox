@@ -9,7 +9,6 @@ class Literal;
 class Unary;
 class Variable;
 class Logical;
-class Call;
 
 class ExpressionStmt;
 class WhileStmt;
@@ -17,8 +16,6 @@ class PrintStmt;
 class VarStmt;
 class IfStmt;
 class Block;
-class FunctionStmt;
-class ReturnStmt;
 
 
 /*
@@ -34,7 +31,6 @@ class ReturnStmt;
 class VisitorExpr {
 public:
     virtual std::shared_ptr<Object> visitBinaryExpr(const Binary& expr) = 0;
-	virtual std::shared_ptr<Object> visitCallExpr(const Call& expr) = 0;
     virtual std::shared_ptr<Object> visitGroupingExpr(const Grouping& expr) = 0;
     virtual std::shared_ptr<Object> visitLiteralExpr(const Literal& expr) = 0;
     virtual std::shared_ptr<Object> visitUnaryExpr(const Unary& expr) = 0;
@@ -52,7 +48,5 @@ public:
     virtual void visitPrintStmt(const PrintStmt& stmt) = 0;
     virtual void visitVarStmt(const VarStmt& stmt) = 0; 
 	virtual void visitBlock(const Block& stmt) = 0;
-	virtual void visitFunctionStmt(const FunctionStmt& stmt) = 0;
-	virtual void visitReturnStmt(const ReturnStmt& stmt) = 0;
     virtual ~VisitorStmt() = default;
 };

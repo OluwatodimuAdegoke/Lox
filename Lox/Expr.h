@@ -67,31 +67,6 @@ public:
 };
 
 /*
-* Call class that contains the functions to create a call expression
-* 
-* Variables:
-* callee: is a shared pointer to an Expr that contains the callee
-* paren: is a Token that contains the paren
-* arguments: is a shared pointer to an std::vector<std::shared_ptr<Expr>> that contains the arguments
-* 
-* Functions:
-* Call: Constructor that creates a call expression with the callee, paren, and arguments
-* accept: Function to accept the visitor using the visitor pattern
-*/
-class Call : public Expr {
-public:
-    std::shared_ptr<Expr> callee;
-    Token paren;
-    std::shared_ptr<std::vector<std::shared_ptr<Expr>>> arguments;
-
-    Call(std::shared_ptr<Expr> callee, Token paren, std::shared_ptr<std::vector<std::shared_ptr<Expr>>> arguments) : callee(callee), paren(paren), arguments(arguments) {}
-
-    std::shared_ptr<Object> accept(VisitorExpr& visitor) override {
-        return visitor.visitCallExpr(*this);
-    }
-};
-
-/*
 * Grouping class that contains the functions to create a grouping expression
 * 
 * Variables:

@@ -1,30 +1,6 @@
 #include "Interpreter.h"
 
-Interpreter::Interpreter() {
-	globals = std::make_shared<Environment>();
-	environment = globals;
-    class ClockFunction : public LoxCallable {
-    public:
-        int arity() override {
-            return 0;
-        }
-
-        std::shared_ptr<Object> call(std::shared_ptr<Interpreter> interpreter,const std::vector<std::shared_ptr<Object>>& arguments) override {
-			return std::make_shared<Number>(static_cast<double>(std::clock()) / CLOCKS_PER_SEC);
-
-        }
-
-        std::string toString() override{
-			return "<native fn>";
-        }
-
-        bool operator==(const Object& other) const override {
-            return false;
-        }
-    };
-
-	globals->define("clock", std::make_shared<ClockFunction>());
-}
+Interpreter::Interpreter() : environment(std::make_shared<Environment>()) {}
 
 void Interpreter::interpret(std::vector<std::shared_ptr<Stmt>> statements) {
     try {
@@ -134,26 +110,6 @@ std::shared_ptr<Object> Interpreter::visitLogicalExpr(const Logical& expr) {
     return evaluate(expr.right);
 }
 
-std::shared_ptr<Object> Interpreter::visitCallExpr(const Call& expr) {
-    std::shared_ptr<Object> callee = evaluate(expr.callee);
-
-    std::vector<std::shared_ptr<Object>> arguments;
-    for (const auto& argument : *expr.arguments) {
-        arguments.push_back(evaluate(argument));
-    }
-
-    
-    std::shared_ptr<LoxCallable> function = std::dynamic_pointer_cast<LoxCallable>(callee);
-
-
-    if (!function) {
-        throw RuntimeError(std::make_shared<Token>(expr.paren), "Can only call functions and classes.");
-    }
-
-    return function->call(std::make_shared<Interpreter>(*this), arguments);
-}
-
-
 void Interpreter::visitExpressionStmt(const ExpressionStmt& stmt) {
     evaluate(stmt.expression);
 }
@@ -186,19 +142,6 @@ void Interpreter::visitWhileStmt(const WhileStmt& stmt) {
 		execute(stmt.body);
 	}
     return;
-}
-
-void Interpreter::visitFunctionStmt(const FunctionStmt& stmt) {
-    std::shared_ptr<LoxFunction> function = std::make_shared<LoxFunction>(std::make_shared<FunctionStmt>(stmt), environment);
-    environment->define(stmt.name.lexeme, function);
-}
-
-void Interpreter::visitReturnStmt(const ReturnStmt& stmt) {
-	std::shared_ptr<Object> value = nullptr;
-	if (stmt.value != nullptr) {
-		value = evaluate(stmt.value);
-	}
-	throw Return(value);
 }
 
 void Interpreter::visitBlock(const Block& stmt) {
