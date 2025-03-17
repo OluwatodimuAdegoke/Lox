@@ -34,13 +34,14 @@ private:
 	std::shared_ptr<Environment> environment; 
 
 
+
 	std::shared_ptr<Object> evaluate(const std::shared_ptr<Expr>& expr);
 	bool isTruthy(const std::shared_ptr<Object>& object);
 	bool isEqual(const std::shared_ptr<Object>& left, const std::shared_ptr<Object>& right);
 	void checkNumberOperand(const Token& op, const std::shared_ptr<Object>& operand);
 	void checkNumberOperands(const Token& op, const std::shared_ptr<Object>& left, const std::shared_ptr<Object>& right);
 	void execute(const std::shared_ptr<Stmt>& stmt);
-	std::shared_ptr<Object> lookUpVariable(const Token& name, const std::shared_ptr<Expr>& expr);
+	
 
 	std::string stringify(const std::shared_ptr<Object>& object);
 
@@ -64,10 +65,8 @@ private:
 
 public:
 	std::shared_ptr<Environment> globals;
-	std::map<std::shared_ptr<Expr>, int> locals;
 	void executeBlock(const std::shared_ptr<std::vector<std::shared_ptr<Stmt>>>& statements, std::shared_ptr<Environment> environment);
 	void interpret(std::vector<std::shared_ptr<Stmt>> statements );
-	void resolve(const std::shared_ptr<Expr> expr, int depth);
 	Interpreter();
 
 };
