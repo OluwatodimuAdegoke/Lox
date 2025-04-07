@@ -26,7 +26,7 @@
 * checkNumberOperands: Function to check if the operands are numbers
 * stringify: Function to convert the object to a string
 */
-class Interpreter : public VisitorExpr, public VisitorStmt
+class Interpreter : public VisitorExpr, public VisitorStmt, public std::enable_shared_from_this<Interpreter>
 {
 private:
 

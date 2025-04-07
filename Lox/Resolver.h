@@ -15,7 +15,8 @@ private:
     void endScope();
     void declare(const Token& name);
     void define(const Token& name);
-    void resolveLocal(const Expr& expr, const Token& name);
+    void resolveLocal(std::shared_ptr<const Expr> expr, const Token& name);
+
     void resolveFunction(const FunctionStmt& stmt, FunctionType type);
 
 public:

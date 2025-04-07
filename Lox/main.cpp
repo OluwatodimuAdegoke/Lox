@@ -41,14 +41,15 @@
 // Intialize the static variable
 bool Error::hadError = false;
 bool Error::hadRuntimeError = false;
-Interpreter Lox::interpreter;
+std::shared_ptr<Interpreter> Lox::interpreter = std::make_shared<Interpreter>();
+
 
 
 // Main function that handles the command line arguments
 int main(int argc, char *argv[])
 {
 
-	argc = 1;
+	argc = 2;
 	// If there are more than 2 arguments, print usage
 	if (argc > 2) {
 		std::cout << "Usage: lox [script]";
@@ -56,7 +57,8 @@ int main(int argc, char *argv[])
 	}
 	//If there is two arguments, run the file
 	else if (argc == 2) {
-		Lox::runFile(argv[1]);
+		Lox::runFile("test.txt");
+	/*	Lox::runFile(argv[1]);*/
 	}
 	// If there is only one argument, run the prompt
 	else {

@@ -1,5 +1,5 @@
 #include "Lox.h"
-
+// At the top of Lox.cpp
 /*
 *Lox class that contains the main functions to run the file, prompt, and connect the source code to the scanner, parser, and interpreter
 * Variables:
@@ -54,13 +54,13 @@
 
 		if (Error::hadError) return;
 
-		Resolver resolver = Resolver(std::make_shared<Interpreter>());
+		Resolver resolver = Resolver(interpreter);
 		resolver.resolve(std::make_shared<std::vector<std::shared_ptr<Stmt>>>(statements));
 
 
 		if (Error::hadError) return;
 
-		interpreter.interpret(statements);
+		interpreter->interpret(statements);
 
 	}
 	

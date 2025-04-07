@@ -44,14 +44,16 @@ void Resolver::define(const Token& name) {
 	scope[name.lexeme] = true;
 }
 
-void Resolver::resolveLocal(const Expr& expr, const Token& name) {
-	for (int i = scopes->size() - 1; i >= 0; i--) {
+
+void Resolver::resolveLocal(std::shared_ptr<const Expr> expr, const Token& name) {
+	for (size_t i = scopes->size(); i-- > 0;) {
 		if (scopes->at(i).find(name.lexeme) != scopes->at(i).end()) {
-			interpreter->resolve(std::make_shared<Variable>(dynamic_cast<const Variable&>(expr)), scopes->size() - 1 - i);
+			interpreter->resolve(std::const_pointer_cast<Expr>(expr), static_cast<int>(scopes->size() - 1 - i));
 			return;
 		}
 	}
 }
+
 
 void Resolver::resolveFunction(const FunctionStmt& stmt, FunctionType type) {
 	
@@ -85,6 +87,7 @@ void Resolver::visitVarStmt(const VarStmt& stmt) {
 	return;
 }
 
+
 std::shared_ptr<Object> Resolver::visitVariableExpr(const Variable& expr) {
 	if (!scopes->empty()) {
 		auto& scope = scopes->back();
@@ -92,13 +95,13 @@ std::shared_ptr<Object> Resolver::visitVariableExpr(const Variable& expr) {
 			Error::error(expr.name, "Cannot read local variable in its own initializer.");
 		}
 	}
-	resolveLocal(expr, expr.name);
+	resolveLocal(expr.shared_from_this(), expr.name);
 	return nullptr;
 }
 
 std::shared_ptr<Object> Resolver::visitAssignExpr(const Assign& expr) {
 	resolve(expr.value);
-	resolveLocal(expr, expr.name);
+	resolveLocal(expr.shared_from_this(), expr.name);
 	return nullptr;
 }
 

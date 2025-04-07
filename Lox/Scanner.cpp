@@ -47,8 +47,9 @@ void Scanner::string() {
 	}
 	advance();
 	int length = current - start - 2;
-	String value = source.substr(start + 1, length);
+	std::string value = source.substr(start + 1, length);
 	addToken(TokenType::STRING, std::make_shared<String>(value));
+
 }
 
 bool Scanner::isDigit(char c) {

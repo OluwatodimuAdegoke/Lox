@@ -28,7 +28,7 @@
 
 class Lox {
 private:
-    static Interpreter interpreter;
+    static std::shared_ptr<Interpreter> interpreter;
 
 public:
     // Run Lox code from a file

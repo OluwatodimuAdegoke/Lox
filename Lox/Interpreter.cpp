@@ -45,13 +45,14 @@ void Interpreter::resolve(const std::shared_ptr<Expr> expr, int depth) {
 }
 
 std::shared_ptr<Object> Interpreter::lookUpVariable(const Token& name, const std::shared_ptr<Expr>& expr) {
-	int distance = locals[expr];
-	if (distance != NULL) {
-		return environment->getAt(distance, name.lexeme);
-	}
-	else {
-		return globals->get(std::make_shared<Token>(name));
-	}
+    auto it = locals.find(expr);
+    if (it != locals.end()) {
+        int distance = it->second;
+        return environment->getAt(distance, name.lexeme);
+    }
+    else {
+        return globals->get(std::make_shared<Token>(name));
+    }
 }
 
 std::string Interpreter::stringify(const std::shared_ptr<Object>& object) {
@@ -128,14 +129,20 @@ std::shared_ptr<Object> Interpreter::visitUnaryExpr(const Unary& expr) {
 }
 
 std::shared_ptr<Object> Interpreter::visitVariableExpr(const Variable& expr) {
-	return lookUpVariable(expr.name, std::make_shared<Variable>(expr));
+    return lookUpVariable(expr.name, std::const_pointer_cast<Expr>(expr.shared_from_this()));
+
+
+
 }
 
 
 std::shared_ptr<Object> Interpreter::visitAssignExpr(const Assign& expr) {
     std::shared_ptr<Object> value = evaluate(expr.value);
 
-    auto it = locals.find(std::make_shared<Assign>(expr));
+    auto it = locals.find(std::const_pointer_cast<Expr>(expr.shared_from_this()));
+    ;
+
+
     if (it != locals.end()) {
         int distance = it->second;
         environment->assignAt(distance, expr.name, value);
@@ -174,7 +181,7 @@ std::shared_ptr<Object> Interpreter::visitCallExpr(const Call& expr) {
         throw RuntimeError(std::make_shared<Token>(expr.paren), "Can only call functions and classes.");
     }
 
-    return function->call(std::make_shared<Interpreter>(*this), arguments);
+    return function->call(shared_from_this(), arguments);
 }
 
 
@@ -182,10 +189,12 @@ void Interpreter::visitExpressionStmt(const ExpressionStmt& stmt) {
     evaluate(stmt.expression);
 }
 
+
 void Interpreter::visitPrintStmt(const PrintStmt& stmt) {
     std::shared_ptr<Object> value = evaluate(stmt.expression);
     std::cout << stringify(value) << std::endl;
 }
+
 
 void Interpreter::visitVarStmt(const VarStmt& stmt) {
     std::shared_ptr<Object> value = nullptr;

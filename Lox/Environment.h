@@ -5,7 +5,7 @@
 #include "Object.h"
 #include "Error.h"
 
-class Environment
+class Environment : public std::enable_shared_from_this<Environment>
 {
 private:
     std::map<std::string, std::shared_ptr<Object>> values;

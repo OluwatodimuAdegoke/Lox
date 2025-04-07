@@ -5,15 +5,35 @@ Token::Token(TokenType type, std::string lexeme,
     : type(type), lexeme(lexeme), literal(literal), line(line) {
 }
 
-std::string Token::toString() const{
-    std::string literalStr;
-    return TokenTypeToString(type) + " " + lexeme + " " + literal->toString();
+//std::string Token::toString() const {
+//    std::string literalStr = (literal != nullptr) ? literal->toString() : "nil";
+//    return TokenTypeToString(type) + " " + lexeme + " " + literalStr;
+//}
+
+std::string Token::toString() const {
+    std::string literalStr = "nil";
+    if (literal) {
+        try {
+            literalStr = literal->toString();
+        }
+        catch (...) {
+            literalStr = "<invalid object>";
+        }
+    }
+    return TokenTypeToString(type) + " " + lexeme + " " + literalStr;
 }
 
 
 
 std::ostream& operator<<(std::ostream& out, const Token& token) {
-    out << Token::TokenTypeToString(token.type) << " " << token.lexeme << " " << token.literal->toString();
+    out << Token::TokenTypeToString(token.type) << " " << token.lexeme << " ";
+    if (token.literal) {
+        out << token.literal->toString();
+    }
+    else {
+        out << "nil";
+    }
+
     return out;
 }
 
