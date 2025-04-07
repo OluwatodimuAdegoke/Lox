@@ -16,6 +16,21 @@ void Interpreter::execute(const std::shared_ptr<Stmt>& stmt) {
     stmt->accept(*this);
 }
 
+void Interpreter::resolve(const std::shared_ptr<Expr> expr, int depth) {
+    locals[expr] = depth;
+}
+
+std::shared_ptr<Object> Interpreter::lookUpVariable(const Token& name, const std::shared_ptr<Expr>& expr) {
+    auto it = locals.find(expr);
+    if (it != locals.end()) {
+        int distance = it->second;
+        return environment->getAt(distance, name.lexeme);
+    }
+    else {
+        return globals->get(std::make_shared<Token>(name));
+    }
+}
+
 std::string Interpreter::stringify(const std::shared_ptr<Object>& object) {
     if (object == nullptr) return "nil";
     return object->toString();
@@ -90,12 +105,26 @@ std::shared_ptr<Object> Interpreter::visitUnaryExpr(const Unary& expr) {
 }
 
 std::shared_ptr<Object> Interpreter::visitVariableExpr(const Variable& expr) {
-    return environment->get(std::make_shared<Token>(expr.name));
+    return lookUpVariable(expr.name, std::const_pointer_cast<Expr>(expr.shared_from_this()));
+
+
+
 }
 
 std::shared_ptr<Object> Interpreter::visitAssignExpr(const Assign& expr) {
     std::shared_ptr<Object> value = evaluate(expr.value);
-    environment->assign(std::make_shared<Token>(expr.name), value);
+
+    auto it = locals.find(std::const_pointer_cast<Expr>(expr.shared_from_this()));
+    ;
+
+
+    if (it != locals.end()) {
+        int distance = it->second;
+        environment->assignAt(distance, expr.name, value);
+    }
+    else {
+        globals->assign(std::make_shared<Token>(expr.name), value);
+    }
     return value;
 }
 
@@ -110,14 +139,35 @@ std::shared_ptr<Object> Interpreter::visitLogicalExpr(const Logical& expr) {
     return evaluate(expr.right);
 }
 
+std::shared_ptr<Object> Interpreter::visitCallExpr(const Call& expr) {
+    std::shared_ptr<Object> callee = evaluate(expr.callee);
+
+    std::vector<std::shared_ptr<Object>> arguments;
+    for (const auto& argument : *expr.arguments) {
+        arguments.push_back(evaluate(argument));
+    }
+
+    
+    std::shared_ptr<LoxCallable> function = std::dynamic_pointer_cast<LoxCallable>(callee);
+
+
+    if (!function) {
+        throw RuntimeError(std::make_shared<Token>(expr.paren), "Can only call functions and classes.");
+    }
+
+    return function->call(shared_from_this(), arguments);
+}
+
 void Interpreter::visitExpressionStmt(const ExpressionStmt& stmt) {
     evaluate(stmt.expression);
 }
+
 
 void Interpreter::visitPrintStmt(const PrintStmt& stmt) {
     std::shared_ptr<Object> value = evaluate(stmt.expression);
     std::cout << stringify(value) << std::endl;
 }
+
 
 void Interpreter::visitVarStmt(const VarStmt& stmt) {
     std::shared_ptr<Object> value = nullptr;

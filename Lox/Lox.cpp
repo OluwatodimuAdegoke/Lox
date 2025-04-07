@@ -1,5 +1,5 @@
 #include "Lox.h"
-
+// At the top of Lox.cpp
 /*
 *Lox class that contains the main functions to run the file, prompt, and connect the source code to the scanner, parser, and interpreter
 * Variables:

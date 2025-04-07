@@ -253,7 +253,7 @@ std::shared_ptr<Expr> Parser::primary() {
 
 Token Parser::consume(TokenType type,const std::string& message) {
 	if (check(type)) return advance();
-
+	
 	throw error(peek(), message);
 }
 
