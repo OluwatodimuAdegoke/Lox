@@ -54,13 +54,7 @@
 
 		if (Error::hadError) return;
 
-		Resolver resolver = Resolver(interpreter);
-		resolver.resolve(std::make_shared<std::vector<std::shared_ptr<Stmt>>>(statements));
-
-
-		if (Error::hadError) return;
-
-		interpreter->interpret(statements);
+		interpreter.interpret(statements);
 
 	}
 	

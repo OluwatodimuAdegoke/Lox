@@ -134,10 +134,8 @@
     <ClCompile Include="GenerateAst.cpp" />
     <ClCompile Include="Interpreter.cpp" />
     <ClCompile Include="Lox.cpp" />
-    <ClCompile Include="LoxFunction.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Parser.cpp" />
-    <ClCompile Include="Resolver.cpp" />
     <ClCompile Include="Scanner.cpp" />
     <ClCompile Include="Token.cpp" />
     <ClCompile Include="TokenType.cpp" />
@@ -151,11 +149,8 @@
     <ClInclude Include="GenerateAst.h" />
     <ClInclude Include="Interpreter.h" />
     <ClInclude Include="Lox.h" />
-    <ClInclude Include="LoxCallable.h" />
-    <ClInclude Include="LoxFunction.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Parser.h" />
-    <ClInclude Include="Resolver.h" />
     <ClInclude Include="Scanner.h" />
     <ClInclude Include="Stmt.h" />
     <ClInclude Include="Token.h" />
