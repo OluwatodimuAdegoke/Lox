@@ -60,6 +60,12 @@
     <ClCompile Include="Resolver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LoxClass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LoxInstance.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GenerateAst.h">
@@ -110,8 +116,22 @@
     <ClInclude Include="Resolver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="LoxClass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LoxInstance.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="test.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Lox.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

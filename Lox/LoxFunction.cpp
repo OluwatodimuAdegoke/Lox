@@ -12,8 +12,13 @@ std::shared_ptr<Object> LoxFunction::call(std::shared_ptr<Interpreter> interpret
         interpreter->executeBlock(declaration->body, environment);
 	}
 	catch (Return& returnValue) {
+		if (isInitializer) {
+			return closure->getAt(0, "this");
+		}
 		return returnValue.value;
 	}
+
+	if (isInitializer) return closure->getAt(0, "this");
     return nullptr; 
 }
 
@@ -31,4 +36,10 @@ bool LoxFunction::operator==(const Object& other) const {
         return declaration == otherFunction->declaration;
     }
     return false;
+}
+
+std::shared_ptr<LoxFunction> LoxFunction::bind(std::shared_ptr<LoxInstance> instance) {
+	std::shared_ptr<Environment> environment = std::make_shared<Environment>(closure);
+	environment->define("this", instance);
+    return std::make_shared<LoxFunction>(declaration, environment, isInitializer);
 }

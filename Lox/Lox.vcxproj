@@ -134,7 +134,9 @@
     <ClCompile Include="GenerateAst.cpp" />
     <ClCompile Include="Interpreter.cpp" />
     <ClCompile Include="Lox.cpp" />
+    <ClCompile Include="LoxClass.cpp" />
     <ClCompile Include="LoxFunction.cpp" />
+    <ClCompile Include="LoxInstance.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Parser.cpp" />
     <ClCompile Include="Resolver.cpp" />
@@ -152,10 +154,13 @@
     <ClInclude Include="Interpreter.h" />
     <ClInclude Include="Lox.h" />
     <ClInclude Include="LoxCallable.h" />
+    <ClInclude Include="LoxClass.h" />
     <ClInclude Include="LoxFunction.h" />
+    <ClInclude Include="LoxInstance.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="Resolver.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Scanner.h" />
     <ClInclude Include="Stmt.h" />
     <ClInclude Include="Token.h" />
@@ -163,6 +168,9 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="test.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Lox.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

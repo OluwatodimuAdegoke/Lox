@@ -1,13 +1,19 @@
-fun makeCounter() {
-  var i = 0;
-  fun count() {
-    i = i + 1;
-    print i;
+class A {
+  method() {
+    print "A method";
   }
-
-  return count;
 }
 
-var counter = makeCounter();
-counter(); // "1".
-counter(); // "2".
+class B < A {
+  method() {
+    print "B method";
+  }
+
+  test() {
+    super.method();
+  }
+}
+
+class C < B {}
+
+C().test();

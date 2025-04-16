@@ -10,15 +10,37 @@ std::vector<std::shared_ptr<Stmt>> Parser::parse() {
 
 std::shared_ptr<Stmt> Parser::declaration() {
 	try {
+		if (match({ TokenType::CLASS })) return classDeclaration();
 		if (match({ TokenType::FUN })) return functionStatement("function");
 		if (match({ TokenType::VAR })) return varDeclaration();
-
 		return statement();
 	}
 	catch (ParseError error) {
 		synchronize();
 		return nullptr;
 	}
+}
+
+std::shared_ptr<Stmt> Parser::classDeclaration() {
+	Token name = consume(TokenType::IDENTIFIER, "Expect class name.");
+
+	std::shared_ptr<Variable> superclass = nullptr;
+	if (match({ TokenType::LESS })) {
+		consume(TokenType::IDENTIFIER, "Expect superclass name.");
+		superclass = std::make_shared<Variable>(previous());
+	}
+
+	consume(TokenType::LEFT_BRACE, "Expect '{' before class body.");
+
+	std::shared_ptr<std::vector<std::shared_ptr<FunctionStmt>>> methods = std::make_shared<std::vector<std::shared_ptr<FunctionStmt>>>();
+
+
+	while (!check(TokenType::RIGHT_BRACE) && !isAtEnd()) {
+		methods->push_back(std::dynamic_pointer_cast<FunctionStmt>(functionStatement("method")));
+	}
+	consume(TokenType::RIGHT_BRACE, "Expect '}' after class body.");
+
+	return std::make_shared<ClassStmt>(name, superclass, methods);
 }
 
 std::shared_ptr<Stmt> Parser::functionStatement(const std::string& kind) {
@@ -179,6 +201,10 @@ std::shared_ptr<Expr> Parser::assignment() {
 			Token name = std::dynamic_pointer_cast<Variable>(expr)->name;
 			return std::make_shared<Assign>(name, value);
 		}
+		else if (std::dynamic_pointer_cast<Get>(expr)) {
+			std::shared_ptr<Get> get = std::dynamic_pointer_cast<Get>(expr);
+			return std::make_shared<Set>(get->object, get->name, value);
+		}
 
 		error(equals, "Invalid assignment target.");
 	}
@@ -267,6 +293,10 @@ std::shared_ptr<Expr> Parser::call() {
 		if (match({ TokenType::LEFT_PAREN })) {
 			expr = finishCall(expr);
 		}
+		else if (match({ TokenType::DOT })) {
+			Token name = consume(TokenType::IDENTIFIER, "Expect property name after '.'.");
+			expr = std::make_shared<Get>(expr, name);
+		}
 		else {
 			break;
 		}
@@ -287,7 +317,6 @@ std::shared_ptr<Expr> Parser::finishCall(std::shared_ptr<Expr> callee) {
 	}
 
 	Token paren = consume(TokenType::RIGHT_PAREN, "Expect ')' after arguments.");
-
 	return std::make_shared<Call>(callee, paren, std::make_shared<std::vector<std::shared_ptr<Expr>>>(arguments));
 }
 
@@ -298,6 +327,19 @@ std::shared_ptr<Expr> Parser::primary() {
 
 	if (match({ TokenType::NUMBER, TokenType::STRING })) {
 		return std::make_shared<Literal>(previous().literal);
+	}
+
+	if (match({ TokenType::SUPER })) {
+		Token keyword = previous();
+		consume(TokenType::DOT, "Expect '.' after 'super'.");
+		Token method = consume(TokenType::IDENTIFIER, "Expect superclass method name.");
+		return std::make_shared<Super>(keyword, method);
+	}
+
+	if (match({ TokenType::THIS })) {
+		auto thisExpr = std::make_shared<This>(previous());
+		return thisExpr;
+
 	}
 
 	if (match({ TokenType::IDENTIFIER })) {

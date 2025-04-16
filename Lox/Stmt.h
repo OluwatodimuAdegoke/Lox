@@ -5,7 +5,6 @@
 #include "Token.h"
 #include "Object.h"
 #include "Visitor.h"
-
 #include "Expr.h"
 /*
 * Stmt abstract class that contains the functions to accept the visitor
@@ -13,7 +12,7 @@
 * Function:
 * accept: Function to accept the visitor using the visitor pattern
 */
-class Stmt {
+class Stmt: public std::enable_shared_from_this<Stmt> {
 public:
     virtual ~Stmt() = default;
     virtual void accept(VisitorStmt& visitor) = 0;
@@ -36,9 +35,10 @@ public:
     Block(std::shared_ptr<std::vector<std::shared_ptr<Stmt>>> statements) : statements(statements) {}
 
     void accept(VisitorStmt& visitor) override {
-        visitor.visitBlock(*this);
+		visitor.visitBlock(std::static_pointer_cast<Block>(shared_from_this()));
     }
 };
+
 
 /*
 * ExpressionStmt class that contains the functions to create a expressionstmt expression
@@ -57,7 +57,7 @@ public:
     ExpressionStmt(std::shared_ptr<Expr> expression) : expression(expression) {}
 
     void accept(VisitorStmt& visitor) override {
-        visitor.visitExpressionStmt(*this);
+		visitor.visitExpressionStmt(std::static_pointer_cast<ExpressionStmt>(shared_from_this()));
     }
 };
 
@@ -82,7 +82,20 @@ public:
     FunctionStmt(Token name, std::shared_ptr<std::vector<Token>> params, std::shared_ptr<std::vector<std::shared_ptr<Stmt>>> body) : name(name), params(params), body(body) {}
 
     void accept(VisitorStmt& visitor) override {
-        visitor.visitFunctionStmt(*this);
+		visitor.visitFunctionStmt(std::static_pointer_cast<FunctionStmt>(shared_from_this()));
+    }
+};
+
+
+class ClassStmt : public Stmt {
+public:
+    Token name;
+    std::shared_ptr<Variable> superclass;
+    std::shared_ptr<std::vector<std::shared_ptr<FunctionStmt>>> methods;
+
+    ClassStmt(Token name,std::shared_ptr<Variable> superclass, std::shared_ptr<std::vector<std::shared_ptr<FunctionStmt>>> methods) : name(name), superclass(superclass), methods(methods) {}
+    void accept(VisitorStmt& visitor) override {
+		visitor.visitClassStmt(std::static_pointer_cast<ClassStmt>(shared_from_this()));
     }
 };
 
@@ -107,7 +120,7 @@ public:
     IfStmt(std::shared_ptr<Expr> condition, std::shared_ptr<Stmt> thenBranch, std::shared_ptr<Stmt> elseBranch) : condition(condition), thenBranch(thenBranch), elseBranch(elseBranch) {}
 
     void accept(VisitorStmt& visitor) override {
-        visitor.visitIfStmt(*this);
+		visitor.visitIfStmt(std::static_pointer_cast<IfStmt>(shared_from_this()));
     }
 };
 
@@ -128,7 +141,7 @@ public:
     PrintStmt(std::shared_ptr<Expr> expression) : expression(expression) {}
 
     void accept(VisitorStmt& visitor) override {
-        visitor.visitPrintStmt(*this);
+        visitor.visitPrintStmt(std::static_pointer_cast<PrintStmt>(shared_from_this()));
     }
 };
 
@@ -151,7 +164,7 @@ public:
     ReturnStmt(Token keyword, std::shared_ptr<Expr> value) : keyword(keyword), value(value) {}
 
     void accept(VisitorStmt& visitor) override {
-        visitor.visitReturnStmt(*this);
+		visitor.visitReturnStmt(std::static_pointer_cast<ReturnStmt>(shared_from_this()));
     }
 };
 
@@ -174,7 +187,7 @@ public:
     VarStmt(Token name, std::shared_ptr<Expr> initializer) : name(name), initializer(initializer) {}
 
     void accept(VisitorStmt& visitor) override {
-        visitor.visitVarStmt(*this);
+		visitor.visitVarStmt(std::static_pointer_cast<VarStmt>(shared_from_this()));
     }
 };
 
@@ -197,7 +210,7 @@ public:
     WhileStmt(std::shared_ptr<Expr> condition, std::shared_ptr<Stmt> body) : condition(condition), body(body) {}
 
     void accept(VisitorStmt& visitor) override {
-        visitor.visitWhileStmt(*this);
+		visitor.visitWhileStmt(std::static_pointer_cast<WhileStmt>(shared_from_this()));
     }
 };
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include "Interpreter.h"
+#include <vector>
 #include "Object.h"
 
 class Interpreter;

@@ -71,22 +71,64 @@ void Resolver::resolveFunction(const FunctionStmt& stmt, FunctionType type) {
 	currentFunction = enclosingFunction;
 }
 
-void Resolver::visitBlock(const Block& stmt) {
+void Resolver::visitBlock(std::shared_ptr<Block> stmt) {
 	beginScope();
-	resolve(stmt.statements);
+	resolve(stmt->statements);
 	endScope();
 	return;
 }
 
-void Resolver::visitVarStmt(const VarStmt& stmt) {
-	declare(stmt.name);
-	if (stmt.initializer != nullptr) {
-		resolve(stmt.initializer);
+void Resolver::visitVarStmt(std::shared_ptr<VarStmt> stmt) {
+	declare(stmt->name);
+	if (stmt->initializer != nullptr) {
+		resolve(stmt->initializer);
 	}
-	define(stmt.name);
+	define(stmt->name);
 	return;
 }
 
+void Resolver::visitClassStmt(std::shared_ptr<ClassStmt> stmt) {
+
+	ClassType enclosingClass = currentClass;
+	currentClass = ClassType::CLASS;
+
+	declare(stmt->name);
+	define(stmt->name);
+
+	if (stmt->superclass != nullptr && stmt->name.lexeme == stmt->superclass->name.lexeme) {
+		Error::error(stmt->superclass->name, "A class cannot inherit from itself.");
+	}
+
+	if (stmt->superclass != nullptr) {
+		currentClass = ClassType::SUBCLASS;
+		resolve(stmt->superclass);
+	}
+
+	if (stmt->superclass != nullptr) {
+		beginScope();
+		scopes->back()["super"] = true;
+	}
+
+	beginScope();
+	scopes->back()["this"] = true;
+
+	for (std::shared_ptr<FunctionStmt> method : *stmt->methods) {
+		FunctionType declaration = FunctionType::METHOD;
+		if (method->name.lexeme == "init") {
+			declaration = FunctionType::INITIALIZER;
+		}
+		resolveFunction(*method, declaration);
+	}
+
+	endScope();
+
+	if (stmt->superclass != nullptr) {
+		endScope();
+	}
+
+	currentClass = enclosingClass;
+	return;
+}
 
 std::shared_ptr<Object> Resolver::visitVariableExpr(const Variable& expr) {
 	if (!scopes->empty()) {
@@ -105,47 +147,50 @@ std::shared_ptr<Object> Resolver::visitAssignExpr(const Assign& expr) {
 	return nullptr;
 }
 
-void Resolver::visitFunctionStmt(const FunctionStmt& stmt) {
-	declare(stmt.name);
-	define(stmt.name);
+void Resolver::visitFunctionStmt(std::shared_ptr<FunctionStmt> stmt) {
+	declare(stmt->name);
+	define(stmt->name);
 
-	resolveFunction(stmt, FunctionType::FUNCTION);
+	resolveFunction(*stmt, FunctionType::FUNCTION);
 	return;
 }
 
-void Resolver::visitExpressionStmt(const ExpressionStmt& stmt) {
-	resolve(stmt.expression);
+void Resolver::visitExpressionStmt(std::shared_ptr<ExpressionStmt> stmt) {
+	resolve(stmt->expression);
 	return;
 }
 
-void Resolver::visitIfStmt(const IfStmt& stmt) {
-	resolve(stmt.condition);
-	resolve(stmt.thenBranch);
-	if (stmt.elseBranch != nullptr) {
-		resolve(stmt.elseBranch);
+void Resolver::visitIfStmt(std::shared_ptr<IfStmt> stmt) {
+	resolve(stmt->condition);
+	resolve(stmt->thenBranch);
+	if (stmt->elseBranch != nullptr) {
+		resolve(stmt->elseBranch);
 	}
 	return;
 }
 
-void Resolver::visitPrintStmt(const PrintStmt& stmt) {
-	resolve(stmt.expression);
+void Resolver::visitPrintStmt(std::shared_ptr<PrintStmt> stmt) {
+	resolve(stmt->expression);
 	return;
 }
 
-void Resolver::visitReturnStmt(const ReturnStmt& stmt) {
+void Resolver::visitReturnStmt(std::shared_ptr<ReturnStmt> stmt) {
 
 	if (currentFunction == FunctionType::NONE) {
-		Error::error(stmt.keyword, "Cannot return from top-level code.");
+		Error::error(stmt->keyword, "Cannot return from top-level code.");
 	}
-	if (stmt.value != nullptr) {
-		resolve(stmt.value);
+	if (stmt->value != nullptr) {
+		if (currentFunction == FunctionType::INITIALIZER) {
+			Error::error(stmt->keyword, "Cannot return a value from an initializer.");
+		}
+		resolve(stmt->value);
 	}
 	return;
 }
 
-void Resolver::visitWhileStmt(const WhileStmt& stmt) {
-	resolve(stmt.condition);
-	resolve(stmt.body);
+void Resolver::visitWhileStmt(std::shared_ptr<WhileStmt> stmt) {
+	resolve(stmt->condition);
+	resolve(stmt->body);
 	return;
 }
 
@@ -160,6 +205,39 @@ std::shared_ptr<Object> Resolver::visitCallExpr(const Call& expr) {
 	for (auto& argument : *expr.arguments) {
 		resolve(argument);
 	}
+	return nullptr;
+}
+
+
+std::shared_ptr<Object> Resolver::visitGetExpr(const Get& expr) {
+	resolve(expr.object);
+	return nullptr;
+}
+
+std::shared_ptr<Object> Resolver::visitSetExpr(const Set& expr) {
+	resolve(expr.value);
+	resolve(expr.object);
+	return nullptr;
+}
+
+std::shared_ptr<Object> Resolver::visitSuperExpr(const Super& expr) {
+	if (currentClass == ClassType::NONE) {
+		Error::error(expr.keyword, "Cannot use 'super' outside of a class.");
+	}
+	else if (currentClass != ClassType::SUBCLASS) {
+		Error::error(expr.keyword, "Cannot use 'super' in a class with no superclass.");
+	}
+	resolveLocal(expr.shared_from_this(), expr.keyword);
+	return nullptr;
+}
+
+std::shared_ptr<Object> Resolver::visitThisExpr(const This& expr) {
+	if (currentClass == ClassType::NONE) {
+		Error::error(expr.keyword, "Cannot use 'this' outside of a class.");
+		return nullptr;
+	}
+
+	resolveLocal(expr.shared_from_this(), expr.keyword);
 	return nullptr;
 }
 

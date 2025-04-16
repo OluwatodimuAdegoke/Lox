@@ -31,6 +31,8 @@ public:
     std::shared_ptr<Object> literal;
     int line;
 
+    Token();
+
     Token(TokenType type, std::string lexeme,
         std::shared_ptr<Object> literal, int line);
 

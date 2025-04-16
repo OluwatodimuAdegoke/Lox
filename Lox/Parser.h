@@ -73,6 +73,7 @@ private:
 	std::shared_ptr<Stmt> returnStatement();
 	std::shared_ptr<Stmt> declaration();
 	std::shared_ptr<Stmt> varDeclaration();
+	std::shared_ptr<Stmt> classDeclaration();
 	std::shared_ptr<Stmt> statement();
 	std::shared_ptr<Stmt> printStatement();
 	std::shared_ptr<Stmt> expressionStatement();

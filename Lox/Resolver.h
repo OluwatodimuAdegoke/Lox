@@ -5,6 +5,14 @@
 enum class FunctionType {
     NONE,
     FUNCTION,
+	INITIALIZER,
+	METHOD,
+};
+
+enum class ClassType {
+	NONE,
+	CLASS,
+	SUBCLASS,
 };
 
 class Resolver : public VisitorExpr, VisitorStmt {
@@ -36,15 +44,21 @@ private:
     std::shared_ptr<Object> visitAssignExpr(const Assign& expr) override;
     std::shared_ptr<Object> visitLogicalExpr(const Logical& expr) override;
     std::shared_ptr<Object> visitCallExpr(const Call& expr) override;
+	std::shared_ptr<Object> visitGetExpr(const Get& expr) override;
+	std::shared_ptr<Object> visitSetExpr(const Set& expr) override;
+	std::shared_ptr<Object> visitThisExpr(const This& expr) override;
+	std::shared_ptr<Object> visitSuperExpr(const Super& expr) override;
 
-    void visitBlock(const Block& stmt) override;
-    void visitExpressionStmt(const ExpressionStmt& stmt) override;
-    void visitIfStmt(const IfStmt& stmt) override;
-    void visitPrintStmt(const PrintStmt& stmt) override;
-    void visitVarStmt(const VarStmt& stmt) override;
-    void visitWhileStmt(const WhileStmt& stmt) override;
-    void visitFunctionStmt(const FunctionStmt& stmt) override;
-    void visitReturnStmt(const ReturnStmt& stmt) override;
+    void visitExpressionStmt(std::shared_ptr<ExpressionStmt> stmt) override;
+    void visitWhileStmt(std::shared_ptr<WhileStmt> stmt)  override;
+    void visitIfStmt(std::shared_ptr<IfStmt> stmt) override;
+    void visitPrintStmt(std::shared_ptr<PrintStmt> stmt) override;
+    void visitVarStmt(std::shared_ptr<VarStmt> stmt) override;
+    void visitClassStmt(std::shared_ptr<ClassStmt> stmt)override;
+    void visitBlock(std::shared_ptr<Block> stmt) override;
+    void visitFunctionStmt(std::shared_ptr<FunctionStmt> stmt) override;
+    void visitReturnStmt(std::shared_ptr<ReturnStmt> stmt) override;
 
     FunctionType currentFunction = FunctionType::NONE;
+	ClassType currentClass = ClassType::NONE;
 };

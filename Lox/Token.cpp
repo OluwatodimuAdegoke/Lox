@@ -1,5 +1,7 @@
 #include "Token.h"
 
+Token::Token() : type(TokenType::EOF_TOKEN), lexeme(""), literal(nullptr), line(-1) {
+}
 Token::Token(TokenType type, std::string lexeme,
     std::shared_ptr<Object> literal, int line)
     : type(type), lexeme(lexeme), literal(literal), line(line) {

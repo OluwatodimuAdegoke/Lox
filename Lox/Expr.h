@@ -5,6 +5,7 @@
 #include "Token.h"
 #include "Object.h"
 #include "Visitor.h"
+#include <cassert>
 
 class Expr : public std::enable_shared_from_this<Expr> {
 public:
@@ -20,7 +21,7 @@ public:
     Assign(Token name, std::shared_ptr<Expr> value) : name(name), value(value) {}
 
     std::shared_ptr<Object> accept(VisitorExpr& visitor) override {
-        return visitor.visitAssignExpr(*std::static_pointer_cast<Assign>(shared_from_this()));
+        return visitor.visitAssignExpr(*this);
     }
 };
 
@@ -33,7 +34,7 @@ public:
     Binary(std::shared_ptr<Expr> left, Token op, std::shared_ptr<Expr> right) : left(left), op(op), right(right) {}
 
     std::shared_ptr<Object> accept(VisitorExpr& visitor) override {
-        return visitor.visitBinaryExpr(*std::static_pointer_cast<Binary>(shared_from_this()));
+		return visitor.visitBinaryExpr(*this);
     }
 };
 
@@ -46,8 +47,55 @@ public:
     Call(std::shared_ptr<Expr> callee, Token paren, std::shared_ptr<std::vector<std::shared_ptr<Expr>>> arguments) : callee(callee), paren(paren), arguments(arguments) {}
 
     std::shared_ptr<Object> accept(VisitorExpr& visitor) override {
-        return visitor.visitCallExpr(*std::static_pointer_cast<Call>(shared_from_this()));
+		return visitor.visitCallExpr(*this);
     }
+};
+
+class Get : public Expr {
+public:
+    std::shared_ptr<Expr> object;
+    Token name;
+
+    Get(std::shared_ptr<Expr> object, Token name) : object(object), name(name) {};
+
+	std::shared_ptr<Object> accept(VisitorExpr& visitor) override {
+		return visitor.visitGetExpr(*this);
+	}
+};
+
+class Set : public Expr {
+public:
+	std::shared_ptr<Expr> object;
+	Token name;
+	std::shared_ptr<Expr> value;
+	Set(std::shared_ptr<Expr> object, Token name, std::shared_ptr<Expr> value) : object(object), name(name), value(value) {}
+	std::shared_ptr<Object> accept(VisitorExpr& visitor) override {
+		return visitor.visitSetExpr(*this);
+	}
+};
+
+class Super : public Expr {
+public:
+    Token keyword;
+    Token method;
+    Super(Token keyword, Token method) : keyword(keyword), method(method) {};
+    std::shared_ptr<Object> accept(VisitorExpr& visitor) override {
+        return visitor.visitSuperExpr(*this);
+    }
+};
+
+class This : public Expr {
+public:
+    Token keyword;
+    This(Token keyword) : keyword(keyword) {
+
+    };
+
+	std::shared_ptr<Object> accept(VisitorExpr& visitor) override {
+
+		return visitor.visitThisExpr(*this);
+
+	}
 };
 
 class Grouping : public Expr {
@@ -57,7 +105,8 @@ public:
     Grouping(std::shared_ptr<Expr> expression) : expression(expression) {}
 
     std::shared_ptr<Object> accept(VisitorExpr& visitor) override {
-        return visitor.visitGroupingExpr(*std::static_pointer_cast<Grouping>(shared_from_this()));
+		return visitor.visitGroupingExpr(*this);
+        //return visitor.visitGroupingExpr(*std::static_pointer_cast<Grouping>(shared_from_this()));
     }
 };
 
@@ -68,7 +117,7 @@ public:
     Literal(std::shared_ptr<Object> value) : value(value) {}
 
     std::shared_ptr<Object> accept(VisitorExpr& visitor) override {
-        return visitor.visitLiteralExpr(*std::static_pointer_cast<Literal>(shared_from_this()));
+		return visitor.visitLiteralExpr(*this);
     }
 };
 
@@ -81,7 +130,7 @@ public:
     Logical(std::shared_ptr<Expr> left, Token op, std::shared_ptr<Expr> right) : left(left), op(op), right(right) {}
 
     std::shared_ptr<Object> accept(VisitorExpr& visitor) override {
-        return visitor.visitLogicalExpr(*std::static_pointer_cast<Logical>(shared_from_this()));
+		return visitor.visitLogicalExpr(*this);
     }
 };
 
@@ -93,7 +142,7 @@ public:
     Unary(Token op, std::shared_ptr<Expr> right) : op(op), right(right) {}
 
     std::shared_ptr<Object> accept(VisitorExpr& visitor) override {
-        return visitor.visitUnaryExpr(*std::static_pointer_cast<Unary>(shared_from_this()));
+		return visitor.visitUnaryExpr(*this);
     }
 };
 
@@ -104,6 +153,6 @@ public:
     Variable(Token name) : name(name) {}
 
     std::shared_ptr<Object> accept(VisitorExpr& visitor) override {
-        return visitor.visitVariableExpr(*std::static_pointer_cast<Variable>(shared_from_this()));
+		return visitor.visitVariableExpr(*this);
     }
 };
